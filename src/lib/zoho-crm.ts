@@ -1,3 +1,5 @@
+import { zohoRateLimiter } from './rate-limiter'
+
 interface ZohoLead {
   First_Name: string
   Last_Name: string
@@ -33,11 +35,41 @@ interface ZohoResponse {
   }>
 }
 
+/**
+ * ZohoCRMService Class
+ *
+ * A comprehensive service class for integrating with Zoho CRM API.
+ * Handles OAuth authentication, lead management, and regional API support.
+ *
+ * Features:
+ * - Automatic OAuth token management with refresh
+ * - Lead creation and updating with duplicate detection
+ * - Multi-regional Zoho API support (International, EU, India, etc.)
+ * - Rate limiting protection (default: 10 requests/second, configurable via ZOHO_RATE_LIMIT)
+ * - Error handling and logging
+ * - TypeScript interfaces for type safety
+ *
+ * @class ZohoCRMService
+ * @example
+ * ```typescript
+ * const zohoCRM = new ZohoCRMService();
+ * const lead = await zohoCRM.createLead(leadData);
+ * ```
+ */
 class ZohoCRMService {
+  /** Base URL for Zoho CRM API (varies by region) */
   private baseUrl: string
+  /** Current OAuth access token */
   private accessToken: string | null = null
+  /** Token expiry timestamp */
   private tokenExpiry: number = 0
 
+  /**
+   * Creates a new ZohoCRMService instance.
+   * Configures the appropriate Zoho API endpoint based on environment variables.
+   *
+   * @constructor
+   */
   constructor() {
     // Use the appropriate Zoho domain based on your account
     // .com for International, .eu for Europe, .in for India
@@ -105,6 +137,9 @@ class ZohoCRMService {
    */
   async createLead(leadData: Partial<ZohoLead>): Promise<ZohoResponse> {
     try {
+      // Wait for rate limiter before making API call
+      await zohoRateLimiter.waitForToken()
+
       const accessToken = await this.getAccessToken()
 
       const response = await fetch(`${this.baseUrl}/Leads`, {
@@ -137,6 +172,9 @@ class ZohoCRMService {
    */
   async searchLeadByEmail(email: string): Promise<any[]> {
     try {
+      // Wait for rate limiter before making API call
+      await zohoRateLimiter.waitForToken()
+
       const accessToken = await this.getAccessToken()
       const searchQuery = `(Email:equals:${email})`
 
@@ -171,6 +209,9 @@ class ZohoCRMService {
    */
   async updateLead(leadId: string, leadData: Partial<ZohoLead>): Promise<ZohoResponse> {
     try {
+      // Wait for rate limiter before making API call
+      await zohoRateLimiter.waitForToken()
+
       const accessToken = await this.getAccessToken()
 
       const response = await fetch(`${this.baseUrl}/Leads/${leadId}`, {

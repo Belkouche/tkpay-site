@@ -2,22 +2,123 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import ZohoCRMService, { formatFormDataForZoho } from '@/lib/zoho-crm'
 import DataSanitizer from '@/lib/sanitizer'
 
+/**
+ * Interface defining the structure of contact form data received from the client
+ * @interface ContactFormData
+ */
 interface ContactFormData {
+  /** Full name of the contact person */
   name: string
+  /** Company or organization name (optional for backward compatibility) */
   company?: string
+  /** Email address for contact */
   email: string
+  /** Phone number with international format */
   phone: string
+  /** Type of interest: 'pos', 'online', or 'account' */
   interest: string
+  /** User's locale preference (fr, ar, en) */
   locale?: string
 }
 
+/**
+ * Interface defining the structure of API response
+ * @interface ApiResponse
+ */
 interface ApiResponse {
+  /** Whether the operation was successful */
   success: boolean
+  /** Human-readable message describing the result */
   message: string
+  /** Zoho CRM lead ID if operation was successful */
   leadId?: string
+  /** Error details if operation failed */
   error?: string
 }
 
+/**
+ * Contact Form Submission API Handler
+ *
+ * Handles contact form submissions with comprehensive security and validation:
+ * - Data sanitization and validation
+ * - Integration with Zoho CRM for lead management
+ * - Duplicate detection and lead updating
+ * - Multi-language support
+ * - Security headers and request validation
+ *
+ * @swagger
+ * /api/submit-contact:
+ *   post:
+ *     tags:
+ *       - Contact
+ *     summary: Submit contact form
+ *     description: |
+ *       Processes contact form submissions with comprehensive security validation.
+ *       Creates or updates leads in Zoho CRM with automatic duplicate detection.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ContactFormData'
+ *           examples:
+ *             french_user:
+ *               summary: French user submission
+ *               value:
+ *                 name: "Jean Dupont"
+ *                 company: "ACME SARL"
+ *                 email: "jean.dupont@acme.fr"
+ *                 phone: "+33 1 23 45 67 89"
+ *                 interest: "pos"
+ *                 locale: "fr"
+ *             arabic_user:
+ *               summary: Arabic user submission
+ *               value:
+ *                 name: "أحمد محمد"
+ *                 company: "شركة التقنية"
+ *                 email: "ahmed@tech.ma"
+ *                 phone: "+212 6 12 34 56 78"
+ *                 interest: "online"
+ *                 locale: "ar"
+ *             english_user:
+ *               summary: English user submission
+ *               value:
+ *                 name: "John Smith"
+ *                 company: "Tech Corp"
+ *                 email: "john@techcorp.com"
+ *                 phone: "+1 555 123 4567"
+ *                 interest: "account"
+ *                 locale: "en"
+ *     responses:
+ *       '200':
+ *         $ref: '#/components/responses/SuccessResponse'
+ *       '201':
+ *         description: Lead created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - properties:
+ *                     success:
+ *                       example: true
+ *                     message:
+ *                       example: "Lead created successfully"
+ *                     leadId:
+ *                       example: "5847372000000123456"
+ *       '400':
+ *         $ref: '#/components/responses/ValidationErrorResponse'
+ *       '405':
+ *         $ref: '#/components/responses/MethodNotAllowedResponse'
+ *       '500':
+ *         $ref: '#/components/responses/ServerErrorResponse'
+ *     security: []
+ *
+ * @route POST /api/submit-contact
+ * @param {NextApiRequest} req - The API request object
+ * @param {NextApiResponse<ApiResponse>} res - The API response object
+ * @returns {Promise<void>} JSON response with operation result
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiResponse>

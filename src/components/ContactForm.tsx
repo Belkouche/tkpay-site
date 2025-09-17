@@ -18,14 +18,42 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+/**
+ * Interface defining the structure of contact form data
+ * @interface FormData
+ */
 interface FormData {
+  /** Full name of the contact person */
   name: string
+  /** Company or organization name */
   company: string
+  /** Email address for contact */
   email: string
+  /** Phone number with international format */
   phone: string
+  /** Type of interest: 'pos', 'online', or 'account' */
   interest: string
 }
 
+/**
+ * ContactForm Component
+ *
+ * A comprehensive contact form component for TKPay landing page with:
+ * - Multi-language support (French, Arabic, English)
+ * - Real-time form validation with localized error messages
+ * - Data sanitization for security
+ * - Integration with Zoho CRM for lead management
+ * - Responsive design with RTL support for Arabic
+ * - Accessible form controls following WCAG guidelines
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ContactForm />
+ * ```
+ *
+ * @returns {JSX.Element} Rendered contact form component
+ */
 export function ContactForm() {
   const { t } = useTranslation('common')
   const router = useRouter()
