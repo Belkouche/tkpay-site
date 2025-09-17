@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { PhoneInput } from '@/components/ui/phone-input'
+import { EmailInput, useEmailValidation } from '@/components/ui/email-input'
 import {
   Select,
   SelectContent,
@@ -31,6 +32,13 @@ export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
+  // Email validation hook
+  const {
+    isValid: isEmailValid,
+    error: emailError,
+    handleValidationChange: handleEmailValidationChange
+  } = useEmailValidation()
+
   const {
     register,
     handleSubmit,
@@ -39,7 +47,11 @@ export function ContactForm() {
     control,
     formState: { errors },
     reset,
-  } = useForm<FormData>()
+  } = useForm<FormData>({
+    defaultValues: {
+      interest: 'pos', // Default to POS
+    },
+  })
 
   const watchedInterest = watch('interest')
 
@@ -129,12 +141,20 @@ export function ContactForm() {
                 {/* Name and Company row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="name">{t('contact.form.name')}</Label>
+                    <Label htmlFor="name">
+                      {t('contact.form.name')} <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                       id="name"
+                      placeholder="Jean Dupont"
                       {...register('name', {
-                        required: 'Ce champ est requis',
-                        minLength: { value: 2, message: 'Minimum 2 caractères' }
+                        required: 'Le nom complet est requis',
+                        minLength: { value: 2, message: 'Minimum 2 caractères' },
+                        maxLength: { value: 100, message: 'Maximum 100 caractères' },
+                        pattern: {
+                          value: /^[a-zA-ZÀ-ÿ\s'-]+$/,
+                          message: 'Le nom ne peut contenir que des lettres et espaces'
+                        }
                       })}
                       className={errors.name ? 'border-red-500' : ''}
                     />
@@ -144,37 +164,65 @@ export function ContactForm() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="company">{t('contact.form.company')}</Label>
+                    <Label htmlFor="company">
+                      {t('contact.form.company')} <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                       id="company"
-                      {...register('company')}
+                      placeholder="Nom de votre entreprise"
+                      {...register('company', {
+                        required: 'Le nom de l\'entreprise est requis',
+                        minLength: { value: 2, message: 'Minimum 2 caractères' },
+                        maxLength: { value: 100, message: 'Maximum 100 caractères' }
+                      })}
+                      className={errors.company ? 'border-red-500' : ''}
                     />
+                    {errors.company && (
+                      <p className="text-sm text-red-500">{errors.company.message}</p>
+                    )}
                   </div>
                 </div>
 
                 {/* Email */}
                 <div className="space-y-2">
                   <Label htmlFor="email">{t('contact.form.email')}</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    {...register('email', {
+                  <Controller
+                    name="email"
+                    control={control}
+                    rules={{
                       required: 'Ce champ est requis',
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: 'Email invalide'
+                      validate: (value) => {
+                        if (!isEmailValid && value) {
+                          return emailError || 'Email invalide'
+                        }
+                        return true
                       }
-                    })}
-                    className={errors.email ? 'border-red-500' : ''}
+                    }}
+                    render={({ field }) => (
+                      <EmailInput
+                        {...field}
+                        id="email"
+                        placeholder="exemple@domaine.com"
+                        onValidationChange={handleEmailValidationChange}
+                        showValidationIcon={true}
+                        realTimeValidation={true}
+                        className={errors.email ? 'border-red-500' : ''}
+                      />
+                    )}
                   />
                   {errors.email && (
                     <p className="text-sm text-red-500">{errors.email.message}</p>
+                  )}
+                  {!errors.email && emailError && watch('email') && (
+                    <p className="text-sm text-amber-600">{emailError}</p>
                   )}
                 </div>
 
                 {/* Phone with country code */}
                 <div className="space-y-2">
-                  <Label htmlFor="phone">{t('contact.form.phone')}</Label>
+                  <Label htmlFor="phone">
+                    {t('contact.form.phone')} <span className="text-red-500">*</span>
+                  </Label>
                   <Controller
                     name="phone"
                     control={control}
@@ -213,11 +261,8 @@ export function ContactForm() {
                   </Select>
                   <input
                     type="hidden"
-                    {...register('interest', { required: 'Ce champ est requis' })}
+                    {...register('interest')}
                   />
-                  {errors.interest && (
-                    <p className="text-sm text-red-500">{errors.interest.message}</p>
-                  )}
                 </div>
 
                 {/* Submit button */}

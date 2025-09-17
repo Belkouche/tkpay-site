@@ -85,11 +85,15 @@ class ZohoCRMService {
         throw new Error(`Zoho OAuth error: ${data.error}`)
       }
 
+      if (!data.access_token) {
+        throw new Error('No access token received from Zoho')
+      }
+
       this.accessToken = data.access_token
       // Set expiry to 5 minutes before actual expiry for safety
       this.tokenExpiry = Date.now() + (data.expires_in - 300) * 1000
 
-      return this.accessToken
+      return this.accessToken!
     } catch (error) {
       console.error('Error getting Zoho access token:', error)
       throw error

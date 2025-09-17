@@ -33,7 +33,7 @@ export default async function handler(
     const formData: ContactFormData = req.body
 
     // Validate required fields
-    const requiredFields = ['name', 'email', 'phone', 'interest']
+    const requiredFields: (keyof ContactFormData)[] = ['name', 'company', 'email', 'phone']
     const missingFields = requiredFields.filter(field => !formData[field])
 
     if (missingFields.length > 0) {
