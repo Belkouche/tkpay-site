@@ -223,6 +223,14 @@ export function ContactForm() {
                         onValidationChange={handleEmailValidationChange}
                         showValidationIcon={true}
                         realTimeValidation={true}
+                        errorMessages={{
+                          invalidFormat: t('contact.form.errors.emailFormat'),
+                          invalidEmail: t('contact.form.errors.emailInvalidFormat'),
+                          tooShort: t('contact.form.errors.emailTooShort'),
+                          tooLong: t('contact.form.errors.emailTooLong'),
+                          consecutiveDots: t('contact.form.errors.emailConsecutiveDots'),
+                          localPartTooLong: t('contact.form.errors.emailLocalPartTooLong')
+                        }}
                         className={errors.email ? 'border-red-500' : ''}
                       />
                     )}

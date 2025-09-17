@@ -75,7 +75,13 @@
         "companyRequired": "Company name is required",
         "submitError": "An error occurred. Please try again.",
         "networkError": "Connection error. Please check your internet connection.",
-        "submitting": "Sending..."
+        "submitting": "Sending...",
+        "emailFormat": "Please enter a valid email format",
+        "emailInvalidFormat": "Email format is invalid",
+        "emailTooShort": "Email is too short",
+        "emailTooLong": "Email is too long",
+        "emailConsecutiveDots": "Email cannot contain consecutive dots",
+        "emailLocalPartTooLong": "Email local part is too long"
       }
     }
   },

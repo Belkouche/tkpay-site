@@ -75,7 +75,13 @@
         "companyRequired": "Le nom de l'entreprise est requis",
         "submitError": "Une erreur est survenue. Veuillez réessayer.",
         "networkError": "Erreur de connexion. Veuillez vérifier votre connexion internet.",
-        "submitting": "Envoi en cours..."
+        "submitting": "Envoi en cours...",
+        "emailFormat": "Veuillez entrer un format d'email valide",
+        "emailInvalidFormat": "Le format de l'email est invalide",
+        "emailTooShort": "L'email est trop court",
+        "emailTooLong": "L'email est trop long",
+        "emailConsecutiveDots": "L'email ne peut pas contenir de points consécutifs",
+        "emailLocalPartTooLong": "La partie locale de l'email est trop longue"
       }
     }
   },
