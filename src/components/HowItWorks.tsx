@@ -98,7 +98,7 @@ export function HowItWorks() {
         {/* Call to action */}
         <div className="text-center mt-16">
           <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Commencez votre transformation numérique dès aujourd'hui.
+            Commencez votre transformation numérique dès aujourd&apos;hui.
             Notre équipe vous accompagne à chaque étape.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
