@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import ZohoCRMService, { formatFormDataForZoho } from '@/lib/zoho-crm'
+import DataSanitizer from '@/lib/sanitizer'
 
 interface ContactFormData {
   name: string
@@ -30,38 +31,22 @@ export default async function handler(
   }
 
   try {
-    const formData: ContactFormData = req.body
+    // Validate request metadata for security
+    DataSanitizer.validateRequestMetadata(req)
 
-    // Validate required fields
-    const requiredFields: (keyof ContactFormData)[] = ['name', 'company', 'email', 'phone']
-    const missingFields = requiredFields.filter(field => !formData[field])
-
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: `Missing required fields: ${missingFields.join(', ')}`,
-      })
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(formData.email)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid email format',
-      })
-    }
+    // Sanitize and validate form data
+    const sanitizedData = DataSanitizer.sanitizeFormData(req.body)
 
     // Initialize Zoho CRM service
     const zohoCRM = new ZohoCRMService()
 
     // Check if lead already exists
-    const existingLeads = await zohoCRM.searchLeadByEmail(formData.email)
+    const existingLeads = await zohoCRM.searchLeadByEmail(sanitizedData.email)
 
     if (existingLeads.length > 0) {
       // Update existing lead with new information
       const existingLead = existingLeads[0]
-      const updatedLeadData = formatFormDataForZoho(formData, formData.locale || 'fr')
+      const updatedLeadData = formatFormDataForZoho(sanitizedData, sanitizedData.locale || 'fr')
 
       // Add update timestamp to description
       updatedLeadData.Description = `${updatedLeadData.Description}\n\nUpdated: ${new Date().toISOString()}`
@@ -79,7 +64,7 @@ export default async function handler(
       }
     } else {
       // Create new lead
-      const leadData = formatFormDataForZoho(formData, formData.locale || 'fr')
+      const leadData = formatFormDataForZoho(sanitizedData, sanitizedData.locale || 'fr')
       const result = await zohoCRM.createLead(leadData)
 
       if (result.data[0].status === 'success') {

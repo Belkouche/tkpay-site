@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { PhoneInput } from '@/components/ui/phone-input'
 import { EmailInput, useEmailValidation } from '@/components/ui/email-input'
+import DataSanitizer from '@/lib/sanitizer'
 import {
   Select,
   SelectContent,
@@ -96,16 +97,19 @@ export function ContactForm() {
     setIsSubmitting(true)
 
     try {
+      // Client-side data sanitization before sending
+      const sanitizedData = DataSanitizer.sanitizeFormData({
+        ...data,
+        locale: router.locale,
+      })
+
       // Submit to Zoho CRM
       const response = await fetch('/api/submit-contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...data,
-          locale: router.locale,
-        }),
+        body: JSON.stringify(sanitizedData),
       })
 
       const result = await response.json()
