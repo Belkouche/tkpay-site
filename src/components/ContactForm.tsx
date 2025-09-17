@@ -48,7 +48,6 @@ export function ContactForm() {
     formState: { errors },
     reset,
     clearErrors,
-    trigger,
   } = useForm<FormData>({
     defaultValues: {
       interest: 'pos', // Default to POS
@@ -87,13 +86,9 @@ export function ContactForm() {
 
   // Update validation rules when language changes
   useEffect(() => {
-    // Clear existing errors and re-trigger validation with new messages
+    // Clear existing errors when language changes
     clearErrors()
-    // Re-trigger validation for fields that had errors
-    if (Object.keys(errors).length > 0) {
-      trigger()
-    }
-  }, [router.locale, clearErrors, trigger, errors])
+  }, [router.locale, clearErrors])
 
   const watchedInterest = watch('interest')
 

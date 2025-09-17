@@ -8,25 +8,33 @@ export interface EmailInputProps
   onValidationChange?: (isValid: boolean, error?: string) => void
   showValidationIcon?: boolean
   realTimeValidation?: boolean
+  errorMessages?: {
+    invalidFormat?: string
+    invalidEmail?: string
+    tooShort?: string
+    tooLong?: string
+    consecutiveDots?: string
+    localPartTooLong?: string
+  }
 }
 
 // Comprehensive email validation
-const validateEmail = (email: string): { isValid: boolean; error?: string } => {
+const validateEmail = (email: string, errorMessages?: EmailInputProps['errorMessages']): { isValid: boolean; error?: string } => {
   if (!email.trim()) {
-    return { isValid: false, error: 'Email is required' }
+    return { isValid: true } // Let parent form handle required validation
   }
 
   // Basic format check
   const basicEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!basicEmailRegex.test(email)) {
-    return { isValid: false, error: 'Please enter a valid email format' }
+    return { isValid: false, error: errorMessages?.invalidFormat || 'Please enter a valid email format' }
   }
 
   // More comprehensive validation
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
   if (!emailRegex.test(email)) {
-    return { isValid: false, error: 'Email format is invalid' }
+    return { isValid: false, error: errorMessages?.invalidEmail || 'Email format is invalid' }
   }
 
   // Check for common typos in domains
@@ -59,23 +67,23 @@ const validateEmail = (email: string): { isValid: boolean; error?: string } => {
 
   // Check minimum length
   if (email.length < 5) {
-    return { isValid: false, error: 'Email is too short' }
+    return { isValid: false, error: errorMessages?.tooShort || 'Email is too short' }
   }
 
   // Check maximum length
   if (email.length > 254) {
-    return { isValid: false, error: 'Email is too long' }
+    return { isValid: false, error: errorMessages?.tooLong || 'Email is too long' }
   }
 
   // Check for consecutive dots
   if (email.includes('..')) {
-    return { isValid: false, error: 'Email cannot contain consecutive dots' }
+    return { isValid: false, error: errorMessages?.consecutiveDots || 'Email cannot contain consecutive dots' }
   }
 
   // Check local part length (before @)
   const localPart = email.split('@')[0]
   if (localPart.length > 64) {
-    return { isValid: false, error: 'Email local part is too long' }
+    return { isValid: false, error: errorMessages?.localPartTooLong || 'Email local part is too long' }
   }
 
   return { isValid: true }
@@ -87,6 +95,7 @@ const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
     onValidationChange,
     showValidationIcon = true,
     realTimeValidation = true,
+    errorMessages,
     onChange,
     onBlur,
     ...props
@@ -103,7 +112,7 @@ const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
     const [value, setValue] = React.useState('')
 
     const performValidation = React.useCallback((email: string, hasBlurred: boolean = false) => {
-      const validation = validateEmail(email)
+      const validation = validateEmail(email, errorMessages)
       const newState = {
         ...validation,
         hasBeenValidated: hasBlurred || validation.isValid || email.length > 0
@@ -113,7 +122,7 @@ const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
       onValidationChange?.(validation.isValid, validation.error)
 
       return validation
-    }, [onValidationChange])
+    }, [onValidationChange, errorMessages])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value
