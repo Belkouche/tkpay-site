@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "solutions": "Solutions",
+    "howItWorks": "How It Works",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Modern, secure payments for Morocco",
+    "subtitle": "TKPay provides a complete suite of payment solutions tailored to the needs of Moroccans",
+    "cta": "Discover our solutions"
+  },
+  "solutions": {
+    "title": "Our Solutions",
+    "pos": {
+      "title": "Electronic Payment Terminals (POS)",
+      "description": "Reliable and secure devices for in-store transactions."
+    },
+    "account": {
+      "title": "Payment Account & Prepaid Card",
+      "description": "A simple way to manage money, send and receive payments, and enjoy the convenience of a prepaid card."
+    },
+    "ecommerce": {
+      "title": "E-commerce Payment Module",
+      "description": "Seamless online payment integration for businesses to accept digital payments with ease."
+    }
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "step1": {
+      "title": "Sign Up",
+      "description": "Create your TKPay account in minutes with simple verification."
+    },
+    "step2": {
+      "title": "Set Up",
+      "description": "Choose your payment solutions and configure your account to fit your needs."
+    },
+    "step3": {
+      "title": "Start Accepting",
+      "description": "Begin accepting payments immediately with our secure solutions."
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Ready to transform your payments? Get in touch with our team today.",
+    "form": {
+      "name": "Full Name",
+      "company": "Company",
+      "email": "Email",
+      "phone": "Phone / WhatsApp",
+      "interest": "I'm interested in",
+      "interestOptions": {
+        "pos": "POS Terminals",
+        "online": "Online Payment",
+        "account": "Payment Account"
+      },
+      "submit": "Send Request",
+      "success": "Thank you! We'll be in touch soon."
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 TKPay. All rights reserved."
+  }
+}

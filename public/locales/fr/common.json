@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "solutions": "Solutions",
+    "howItWorks": "Comment ça marche",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Paiements modernes et sécurisés pour le Maroc",
+    "subtitle": "TKPay fournit une suite complète de solutions de paiement adaptées aux besoins des Marocains",
+    "cta": "Découvrir nos solutions"
+  },
+  "solutions": {
+    "title": "Nos Solutions",
+    "pos": {
+      "title": "Terminaux de Paiement Électronique (TPE)",
+      "description": "Dispositifs fiables et sécurisés pour les transactions en magasin."
+    },
+    "account": {
+      "title": "Compte de Paiement & Carte Prépayée",
+      "description": "Un moyen simple de gérer l'argent, d'envoyer et de recevoir des paiements, et de profiter de la commodité d'une carte prépayée."
+    },
+    "ecommerce": {
+      "title": "Module de Paiement E-commerce",
+      "description": "Intégration de paiement en ligne transparente pour que les entreprises acceptent facilement les paiements numériques."
+    }
+  },
+  "howItWorks": {
+    "title": "Comment ça marche",
+    "step1": {
+      "title": "Inscription",
+      "description": "Créez votre compte TKPay en quelques minutes avec une vérification simple."
+    },
+    "step2": {
+      "title": "Configuration",
+      "description": "Choisissez vos solutions de paiement et configurez votre compte selon vos besoins."
+    },
+    "step3": {
+      "title": "Commencez à accepter",
+      "description": "Commencez à accepter les paiements immédiatement avec nos solutions sécurisées."
+    }
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Prêt à transformer vos paiements ? Contactez notre équipe dès aujourd'hui.",
+    "form": {
+      "name": "Nom complet",
+      "company": "Entreprise",
+      "email": "Email",
+      "phone": "Téléphone / WhatsApp",
+      "interest": "Je suis intéressé par",
+      "interestOptions": {
+        "pos": "Terminaux TPE",
+        "online": "Paiements en ligne",
+        "account": "Compte de paiement"
+      },
+      "submit": "Envoyer la demande",
+      "success": "Merci ! Nous vous contacterons bientôt."
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 TKPay. Tous droits réservés."
+  }
+}
