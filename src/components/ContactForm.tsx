@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { useForm, Controller } from 'react-hook-form'
@@ -47,11 +47,53 @@ export function ContactForm() {
     control,
     formState: { errors },
     reset,
+    clearErrors,
+    trigger,
   } = useForm<FormData>({
     defaultValues: {
       interest: 'pos', // Default to POS
     },
   })
+
+  // Create validation rules that update with language changes
+  const getValidationRules = useCallback(() => ({
+    name: {
+      required: t('contact.form.errors.nameRequired'),
+      minLength: { value: 2, message: t('contact.form.errors.nameMinLength') },
+      maxLength: { value: 100, message: t('contact.form.errors.nameMaxLength') },
+      pattern: {
+        value: /^[a-zA-ZÀ-ÿ\s'-]+$/,
+        message: t('contact.form.errors.namePattern')
+      }
+    },
+    company: {
+      required: t('contact.form.errors.companyRequired'),
+      minLength: { value: 2, message: t('contact.form.errors.companyMinLength') },
+      maxLength: { value: 100, message: t('contact.form.errors.companyMaxLength') }
+    },
+    email: {
+      required: t('contact.form.errors.required'),
+      validate: (value: string) => {
+        if (!isEmailValid && value) {
+          return emailError || t('contact.form.errors.emailInvalid')
+        }
+        return true
+      }
+    },
+    phone: {
+      required: t('contact.form.errors.required'),
+    }
+  }), [t, isEmailValid, emailError])
+
+  // Update validation rules when language changes
+  useEffect(() => {
+    // Clear existing errors and re-trigger validation with new messages
+    clearErrors()
+    // Re-trigger validation for fields that had errors
+    if (Object.keys(errors).length > 0) {
+      trigger()
+    }
+  }, [router.locale, clearErrors, trigger, errors])
 
   const watchedInterest = watch('interest')
 
@@ -147,15 +189,7 @@ export function ContactForm() {
                     <Input
                       id="name"
                       placeholder={t('contact.form.placeholders.name')}
-                      {...register('name', {
-                        required: t('contact.form.errors.nameRequired'),
-                        minLength: { value: 2, message: t('contact.form.errors.nameMinLength') },
-                        maxLength: { value: 100, message: t('contact.form.errors.nameMaxLength') },
-                        pattern: {
-                          value: /^[a-zA-ZÀ-ÿ\s'-]+$/,
-                          message: t('contact.form.errors.namePattern')
-                        }
-                      })}
+                      {...register('name', getValidationRules().name)}
                       className={errors.name ? 'border-red-500' : ''}
                     />
                     {errors.name && (
@@ -170,11 +204,7 @@ export function ContactForm() {
                     <Input
                       id="company"
                       placeholder={t('contact.form.placeholders.company')}
-                      {...register('company', {
-                        required: t('contact.form.errors.companyRequired'),
-                        minLength: { value: 2, message: t('contact.form.errors.companyMinLength') },
-                        maxLength: { value: 100, message: t('contact.form.errors.companyMaxLength') }
-                      })}
+                      {...register('company', getValidationRules().company)}
                       className={errors.company ? 'border-red-500' : ''}
                     />
                     {errors.company && (
@@ -189,15 +219,7 @@ export function ContactForm() {
                   <Controller
                     name="email"
                     control={control}
-                    rules={{
-                      required: t('contact.form.errors.required'),
-                      validate: (value) => {
-                        if (!isEmailValid && value) {
-                          return emailError || t('contact.form.errors.emailInvalid')
-                        }
-                        return true
-                      }
-                    }}
+                    rules={getValidationRules().email}
                     render={({ field }) => (
                       <EmailInput
                         {...field}
@@ -226,9 +248,7 @@ export function ContactForm() {
                   <Controller
                     name="phone"
                     control={control}
-                    rules={{
-                      required: t('contact.form.errors.required'),
-                    }}
+                    rules={getValidationRules().phone}
                     render={({ field }) => (
                       <PhoneInput
                         {...field}
