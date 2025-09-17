@@ -85,11 +85,11 @@ export function ContactForm() {
       } else {
         console.error('Form submission failed:', result.message)
         // You could show an error state here
-        alert('Une erreur est survenue. Veuillez réessayer.')
+        alert(t('contact.form.errors.submitError'))
       }
     } catch (error) {
       console.error('Network error:', error)
-      alert('Erreur de connexion. Veuillez vérifier votre connexion internet.')
+      alert(t('contact.form.errors.networkError'))
     } finally {
       setIsSubmitting(false)
     }
@@ -109,7 +109,7 @@ export function ContactForm() {
                   {t('contact.form.success')}
                 </h3>
                 <p className="text-muted-foreground">
-                  Notre équipe vous contactera dans les 24 heures.
+                  {t('contact.form.successMessage')}
                 </p>
               </CardContent>
             </Card>
@@ -146,14 +146,14 @@ export function ContactForm() {
                     </Label>
                     <Input
                       id="name"
-                      placeholder="Jean Dupont"
+                      placeholder={t('contact.form.placeholders.name')}
                       {...register('name', {
-                        required: 'Le nom complet est requis',
-                        minLength: { value: 2, message: 'Minimum 2 caractères' },
-                        maxLength: { value: 100, message: 'Maximum 100 caractères' },
+                        required: t('contact.form.errors.nameRequired'),
+                        minLength: { value: 2, message: t('contact.form.errors.nameMinLength') },
+                        maxLength: { value: 100, message: t('contact.form.errors.nameMaxLength') },
                         pattern: {
                           value: /^[a-zA-ZÀ-ÿ\s'-]+$/,
-                          message: 'Le nom ne peut contenir que des lettres et espaces'
+                          message: t('contact.form.errors.namePattern')
                         }
                       })}
                       className={errors.name ? 'border-red-500' : ''}
@@ -169,11 +169,11 @@ export function ContactForm() {
                     </Label>
                     <Input
                       id="company"
-                      placeholder="Nom de votre entreprise"
+                      placeholder={t('contact.form.placeholders.company')}
                       {...register('company', {
-                        required: 'Le nom de l\'entreprise est requis',
-                        minLength: { value: 2, message: 'Minimum 2 caractères' },
-                        maxLength: { value: 100, message: 'Maximum 100 caractères' }
+                        required: t('contact.form.errors.companyRequired'),
+                        minLength: { value: 2, message: t('contact.form.errors.companyMinLength') },
+                        maxLength: { value: 100, message: t('contact.form.errors.companyMaxLength') }
                       })}
                       className={errors.company ? 'border-red-500' : ''}
                     />
@@ -190,10 +190,10 @@ export function ContactForm() {
                     name="email"
                     control={control}
                     rules={{
-                      required: 'Ce champ est requis',
+                      required: t('contact.form.errors.required'),
                       validate: (value) => {
                         if (!isEmailValid && value) {
-                          return emailError || 'Email invalide'
+                          return emailError || t('contact.form.errors.emailInvalid')
                         }
                         return true
                       }
@@ -202,7 +202,7 @@ export function ContactForm() {
                       <EmailInput
                         {...field}
                         id="email"
-                        placeholder="exemple@domaine.com"
+                        placeholder={t('contact.form.placeholders.email')}
                         onValidationChange={handleEmailValidationChange}
                         showValidationIcon={true}
                         realTimeValidation={true}
@@ -227,13 +227,13 @@ export function ContactForm() {
                     name="phone"
                     control={control}
                     rules={{
-                      required: 'Ce champ est requis',
+                      required: t('contact.form.errors.required'),
                     }}
                     render={({ field }) => (
                       <PhoneInput
                         {...field}
                         defaultCountry="MA"
-                        placeholder="Enter phone number"
+                        placeholder={t('contact.form.placeholders.phone')}
                         className={errors.phone ? 'border-red-500' : ''}
                       />
                     )}
@@ -251,7 +251,7 @@ export function ContactForm() {
                     onValueChange={(value) => setValue('interest', value)}
                   >
                     <SelectTrigger className={errors.interest ? 'border-red-500' : ''}>
-                      <SelectValue placeholder="Sélectionnez une option" />
+                      <SelectValue placeholder={t('contact.form.placeholders.interest')} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="pos">{t('contact.form.interestOptions.pos')}</SelectItem>
@@ -276,7 +276,7 @@ export function ContactForm() {
                     {isSubmitting ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Envoi en cours...
+                        {t('contact.form.errors.submitting')}
                       </>
                     ) : (
                       <>

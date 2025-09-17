@@ -54,7 +54,29 @@
         "account": "Payment Account"
       },
       "submit": "Send Request",
-      "success": "Thank you! We'll be in touch soon."
+      "success": "Thank you! We'll be in touch soon.",
+      "successMessage": "Our team will contact you within 24 hours.",
+      "placeholders": {
+        "name": "John Doe",
+        "company": "Your company name",
+        "email": "example@domain.com",
+        "phone": "Enter your phone number",
+        "interest": "Select an option"
+      },
+      "errors": {
+        "required": "This field is required",
+        "namePattern": "Name can only contain letters and spaces",
+        "nameMinLength": "Minimum 2 characters",
+        "nameMaxLength": "Maximum 100 characters",
+        "companyMinLength": "Minimum 2 characters",
+        "companyMaxLength": "Maximum 100 characters",
+        "emailInvalid": "Invalid email",
+        "nameRequired": "Full name is required",
+        "companyRequired": "Company name is required",
+        "submitError": "An error occurred. Please try again.",
+        "networkError": "Connection error. Please check your internet connection.",
+        "submitting": "Sending..."
+      }
     }
   },
   "footer": {

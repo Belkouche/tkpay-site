@@ -54,7 +54,29 @@
         "account": "Compte de paiement"
       },
       "submit": "Envoyer la demande",
-      "success": "Merci ! Nous vous contacterons bientôt."
+      "success": "Merci ! Nous vous contacterons bientôt.",
+      "successMessage": "Notre équipe vous contactera dans les 24 heures.",
+      "placeholders": {
+        "name": "Jean Dupont",
+        "company": "Nom de votre entreprise",
+        "email": "exemple@domaine.com",
+        "phone": "Entrez votre numéro",
+        "interest": "Sélectionnez une option"
+      },
+      "errors": {
+        "required": "Ce champ est requis",
+        "namePattern": "Le nom ne peut contenir que des lettres et espaces",
+        "nameMinLength": "Minimum 2 caractères",
+        "nameMaxLength": "Maximum 100 caractères",
+        "companyMinLength": "Minimum 2 caractères",
+        "companyMaxLength": "Maximum 100 caractères",
+        "emailInvalid": "Email invalide",
+        "nameRequired": "Le nom complet est requis",
+        "companyRequired": "Le nom de l'entreprise est requis",
+        "submitError": "Une erreur est survenue. Veuillez réessayer.",
+        "networkError": "Erreur de connexion. Veuillez vérifier votre connexion internet.",
+        "submitting": "Envoi en cours..."
+      }
     }
   },
   "footer": {
