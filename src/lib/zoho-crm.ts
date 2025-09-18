@@ -93,8 +93,11 @@ class ZohoCRMService {
       throw new Error('Missing Zoho CRM credentials in environment variables')
     }
 
+    // Determine the correct accounts domain based on the CRM base URL
+    const accountsDomain = this.getAccountsDomain()
+
     try {
-      const response = await fetch('https://accounts.zoho.com/oauth/v2/token', {
+      const response = await fetch(`${accountsDomain}/oauth/v2/token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -108,13 +111,27 @@ class ZohoCRMService {
       })
 
       if (!response.ok) {
-        throw new Error(`Failed to get access token: ${response.statusText}`)
+        const errorText = await response.text()
+        console.error('OAuth error response:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText,
+          clientId: clientId?.substring(0, 10) + '...',
+          accountsDomain
+        })
+        throw new Error(`Failed to get access token: ${response.statusText} - ${errorText}`)
       }
 
       const data = await response.json()
 
       if (data.error) {
-        throw new Error(`Zoho OAuth error: ${data.error}`)
+        console.error('Zoho OAuth error details:', {
+          error: data.error,
+          errorDescription: data.error_description,
+          clientId: clientId?.substring(0, 10) + '...',
+          accountsDomain
+        })
+        throw new Error(`Zoho OAuth error: ${data.error}${data.error_description ? ` - ${data.error_description}` : ''}`)
       }
 
       if (!data.access_token) {
@@ -129,6 +146,26 @@ class ZohoCRMService {
     } catch (error) {
       console.error('Error getting Zoho access token:', error)
       throw error
+    }
+  }
+
+  /**
+   * Get the correct accounts domain based on the CRM base URL
+   */
+  private getAccountsDomain(): string {
+    const baseUrl = this.baseUrl
+
+    if (baseUrl.includes('.eu')) {
+      return 'https://accounts.zoho.eu'
+    } else if (baseUrl.includes('.in')) {
+      return 'https://accounts.zoho.in'
+    } else if (baseUrl.includes('.com.au')) {
+      return 'https://accounts.zoho.com.au'
+    } else if (baseUrl.includes('.jp')) {
+      return 'https://accounts.zoho.jp'
+    } else {
+      // Default to .com for international
+      return 'https://accounts.zoho.com'
     }
   }
 
