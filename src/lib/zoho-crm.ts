@@ -226,6 +226,12 @@ class ZohoCRMService {
 
       if (!response.ok) {
         const errorText = await response.text()
+        console.error('Zoho create lead error:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText,
+          leadData: JSON.stringify(leadData, null, 2)
+        })
         throw new Error(`Failed to create lead: ${response.statusText} - ${errorText}`)
       }
 
@@ -320,7 +326,7 @@ export function formatFormDataForZoho(formData: {
   // Split name into first and last name
   const nameParts = formData.name.trim().split(' ')
   const firstName = nameParts[0] || ''
-  const lastName = nameParts.slice(1).join(' ') || ''
+  const lastName = nameParts.slice(1).join(' ') || 'N/A'
 
   // Map interest to Zoho values
   const interestMapping = {
@@ -336,17 +342,18 @@ export function formatFormDataForZoho(formData: {
     'en': 'English' as const,
   }
 
+  // Ensure all required fields are present and not empty
   return {
-    First_Name: firstName,
-    Last_Name: lastName,
-    Company: formData.company || '',
+    First_Name: firstName || 'Unknown',
+    Last_Name: lastName || 'N/A',
+    Company: formData.company || 'Not Specified',
     Email: formData.email,
     Phone: formData.phone,
     Lead_Source: 'Website Form',
     Description: `Lead submitted from TKPay landing page. Interest: ${formData.interest}. Language: ${locale}`,
-    Interest_Type: interestMapping[formData.interest as keyof typeof interestMapping],
-    Language_Preference: languageMapping[locale as keyof typeof languageMapping],
-    Lead_Status: 'New',
+    Interest_Type: interestMapping[formData.interest as keyof typeof interestMapping] || 'POS',
+    Language_Preference: languageMapping[locale as keyof typeof languageMapping] || 'French',
+    Lead_Status: 'Not Contacted',
   }
 }
 
