@@ -82,7 +82,9 @@
         "emailTooShort": "L'email est trop court",
         "emailTooLong": "L'email est trop long",
         "emailConsecutiveDots": "L'email ne peut pas contenir de points consécutifs",
-        "emailLocalPartTooLong": "La partie locale de l'email est trop longue"
+        "emailLocalPartTooLong": "La partie locale de l'email est trop longue",
+        "rateLimit": "Limite de débit dépassée. Veuillez réessayer plus tard.",
+        "securityValidation": "La validation de sécurité a échoué. Veuillez actualiser la page et réessayer."
       }
     }
   },

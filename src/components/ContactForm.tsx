@@ -148,16 +148,12 @@ export function ContactForm() {
         body: JSON.stringify(sanitizedData),
       })
 
-      if (!response.ok) {
-        if (response.status === 429) {
-          alert(t('contact.form.errors.submitError') + ': Rate limit exceeded. Please try again later.');
-          return;
-        } else if (response.status === 403) {
-          alert('Security validation failed. Please refresh the page and try again.');
-          return;
-        }
-        
-        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      if (response.status === 429) {
+        alert(t('contact.form.errors.submitError') + ': ' + t('contact.form.errors.rateLimit'));
+        return;
+      } else if (response.status === 403) {
+        alert(t('contact.form.errors.securityValidation'));
+        return;
       }
 
       const result = await response.json()
@@ -178,9 +174,9 @@ export function ContactForm() {
     } catch (error: any) {
       console.error('Network error:', error)
       if (error.message?.includes('Rate limit')) {
-        alert('Rate limit exceeded. Please try again later.');
+        alert(t('contact.form.errors.rateLimit'));
       } else if (error.message?.includes('CSRF token')) {
-        alert('Security validation failed. Please refresh the page and try again.');
+        alert(t('contact.form.errors.securityValidation'));
       } else {
         alert(t('contact.form.errors.networkError') + (process.env.NODE_ENV === 'development' ? `: ${error.message}` : ''))
       }

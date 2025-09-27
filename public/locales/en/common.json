@@ -82,7 +82,9 @@
         "emailTooShort": "Email is too short",
         "emailTooLong": "Email is too long",
         "emailConsecutiveDots": "Email cannot contain consecutive dots",
-        "emailLocalPartTooLong": "Email local part is too long"
+        "emailLocalPartTooLong": "Email local part is too long",
+        "rateLimit": "Rate limit exceeded. Please try again later.",
+        "securityValidation": "Security validation failed. Please refresh the page and try again."
       }
     }
   },

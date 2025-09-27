@@ -1,9 +1,9 @@
 {
-  \"nav\": {
-    \"solutions\": \"الحلول\",
-    \"howItWorks\": \"كيف يعمل\",
-    \"contact\": \"اتصل بنا\",
-    \"apiDocs\": \"وثائق API\"
+  "nav": {
+    "solutions": "الحلول",
+    "howItWorks": "كيف يعمل",
+    "contact": "اتصل بنا",
+    "apiDocs": "وثائق API"
   },
   "hero": {
     "title": "مدفوعات حديثة وآمنة للمغرب",
@@ -58,7 +58,7 @@
       "success": "شكراً! سنتواصل معك قريباً.",
       "successMessage": "سيتواصل فريقنا معك خلال 24 ساعة.",
       "placeholders": {
-        "name": "John Doe",
+        "name": "Ahmed Mohamed",
         "company": "Your company name",
         "email": "example@domain.com",
         "phone": "Enter your phone number",
@@ -82,11 +82,13 @@
         "emailTooShort": "البريد الإلكتروني قصير جداً",
         "emailTooLong": "البريد الإلكتروني طويل جداً",
         "emailConsecutiveDots": "لا يمكن أن يحتوي البريد الإلكتروني على نقاط متتالية",
-        "emailLocalPartTooLong": "الجزء المحلي من البريد الإلكتروني طويل جداً"
+        "emailLocalPartTooLong": "الجزء المحلي من البريد الإلكتروني طويل جداً",
+        "rateLimit": "تم تجاوز الحد الأقصى للطلبات. يرجى المحاولة مرة أخرى لاحقاً.",
+        "securityValidation": "فشلت عملية التحقق من الأمان. يرجى تحديث الصفحة والمحاولة مرة أخرى."
       }
     }
   },
-  \"footer\": {
-    \"copyright\": \"© 2025 TKPay. جميع الحقوق محفوظة.\"
+  "footer": {
+    "copyright": "© 2025 TKPay. جميع الحقوق محفوظة."
   }
 }
