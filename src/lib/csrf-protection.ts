@@ -49,7 +49,9 @@ function cleanupExpiredTokens(): void {
   const now = new Date();
   const expiredTokens: string[] = [];
   
-  for (const [token, expiry] of csrfTokens.entries()) {
+  // Convert to array to avoid iteration issues
+  const entries = Array.from(csrfTokens.entries());
+  for (const [token, expiry] of entries) {
     if (expiry < now) {
       expiredTokens.push(token);
     }
