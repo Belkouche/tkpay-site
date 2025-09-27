@@ -30,7 +30,7 @@ export function Navigation() {
           {/* Logo */}
           <div className="flex items-center">
             <h1 className="text-2xl font-bold text-foreground">
-              TKPay
+              {t('nav.logo')}
             </h1>
           </div>
 

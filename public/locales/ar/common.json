@@ -1,5 +1,6 @@
 {
   "nav": {
+    "logo": "TKPay",
     "solutions": "الحلول",
     "howItWorks": "كيف يعمل",
     "contact": "اتصل بنا",
@@ -106,7 +107,7 @@
       }
     }
   },
-  "footer": {
+  "phoneInput": {\n    "noCountryFound": \"لم يتم العثور على بلد.\"\n  },
     "copyright": "© 2025 TKPay. جميع الحقوق محفوظة."
   }
 }
