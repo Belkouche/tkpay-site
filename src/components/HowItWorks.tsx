@@ -49,7 +49,7 @@ export function HowItWorks() {
               return (
                 <div key={index} className="relative">
                   {/* Step card */}
-                  <Card className="relative z-10 hover:scale-105 transition-all duration-300 backdrop-blur-md bg-white/80 border border-white/20 shadow-lg hover:bg-white/90">
+                  <Card className="relative z-10 hover:scale-105 transition-all duration-300 backdrop-blur-md bg-white/80 border border-white/20 shadow-lg hover:bg-white/90 h-full flex flex-col">
                     {/* Step number */}
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                       <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
@@ -57,21 +57,23 @@ export function HowItWorks() {
                       </div>
                     </div>
 
-                    <CardHeader className="text-center pb-4 pt-8">
+                    <CardHeader className="text-center pb-4 pt-8 flex-grow flex flex-col items-center justify-start">
                       {/* Icon */}
                       <div className="mb-4">
                         <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center">
                           <Icon className="w-8 h-8 text-white" />
                         </div>
                       </div>
-                      <CardTitle className="text-xl md:text-2xl font-semibold text-foreground">
+                      <CardTitle className="text-xl md:text-2xl font-semibold text-foreground text-center">
                         {step.title}
                       </CardTitle>
                     </CardHeader>
 
-                    <CardContent className="text-center pt-0">
-                      <CardDescription className="text-muted-foreground leading-relaxed text-base">
-                        {step.description}
+                    <CardContent className="text-center pt-0 flex-grow flex items-center justify-center">
+                      <CardDescription className="text-muted-foreground leading-relaxed text-base w-full">
+                        <div className="h-full flex items-center justify-center">
+                          {step.description}
+                        </div>
                       </CardDescription>
                     </CardContent>
                   </Card>
