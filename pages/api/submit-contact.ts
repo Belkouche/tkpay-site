@@ -180,7 +180,7 @@ async function contactHandler(
       return res.status(200).json({
         success: true,
         message: 'Lead already submitted recently',
-        leadId: null, // No lead was actually created/updated
+        leadId: undefined, // No lead was actually created/updated
       });
     }
 
