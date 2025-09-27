@@ -59,15 +59,15 @@ export function Hero() {
           <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>Sécurisé et conforme</span>
+              <span>{t('hero.trustIndicators.secure')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span>Support 24/7</span>
+              <span>{t('hero.trustIndicators.support')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span>Installation rapide</span>
+              <span>{t('hero.trustIndicators.installation')}</span>
             </div>
           </div>
         </div>

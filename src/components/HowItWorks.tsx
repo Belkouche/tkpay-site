@@ -100,21 +100,20 @@ export function HowItWorks() {
         {/* Call to action */}
         <div className="text-center mt-16">
           <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Commencez votre transformation numérique dès aujourd&apos;hui.
-            Notre équipe vous accompagne à chaque étape.
+            {t('howItWorks.cta.text')}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>Processus simplifié</span>
+              <span>{t('howItWorks.cta.process')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span>Support dédié</span>
+              <span>{t('howItWorks.cta.support')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span>Mise en service rapide</span>
+              <span>{t('howItWorks.cta.setup')}</span>
             </div>
           </div>
         </div>

@@ -88,8 +88,7 @@ export function Solutions() {
         {/* Bottom section */}
         <div className="text-center mt-16">
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Nos solutions sont conçues pour répondre aux besoins spécifiques du marché marocain,
-            avec un support local et une intégration simple.
+            {t('solutions.description')}
           </p>
         </div>
       </div>

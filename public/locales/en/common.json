@@ -40,6 +40,24 @@
       "description": "Begin accepting payments immediately with our secure solutions."
     }
   },
+  "hero": {
+    "trustIndicators": {
+      "secure": "Secure and compliant",
+      "support": "24/7 Support",
+      "installation": "Quick installation"
+    }
+  },
+  "solutions": {
+    "description": "Our solutions are designed to meet the specific needs of the Moroccan market, with local support and simple integration."
+  },
+  "howItWorks": {
+    "cta": {
+      "text": "Start your digital transformation today. Our team supports you at every step.",
+      "process": "Simplified process",
+      "support": "Dedicated support",
+      "setup": "Quick setup"
+    }
+  },
   "contact": {
     "title": "Contact Us",
     "subtitle": "Ready to transform your payments? Get in touch with our team today.",

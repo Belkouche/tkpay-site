@@ -40,6 +40,24 @@
       "description": "Commencez à accepter les paiements immédiatement avec nos solutions sécurisées."
     }
   },
+  "hero": {
+    "trustIndicators": {
+      "secure": "Sécurisé et conforme",
+      "support": "Support 24/7",
+      "installation": "Installation rapide"
+    }
+  },
+  "solutions": {
+    "description": "Nos solutions sont conçues pour répondre aux besoins spécifiques du marché marocain, avec un support local et une intégration simple."
+  },
+  "howItWorks": {
+    "cta": {
+      "text": "Commencez votre transformation numérique dès aujourd'hui. Notre équipe vous accompagne à chaque étape.",
+      "process": "Processus simplifié",
+      "support": "Support dédié",
+      "setup": "Mise en service rapide"
+    }
+  },
   "contact": {
     "title": "Contactez-nous",
     "subtitle": "Prêt à transformer vos paiements ? Contactez notre équipe dès aujourd'hui.",
