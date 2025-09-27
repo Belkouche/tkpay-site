@@ -30,8 +30,13 @@ class RateLimiter {
   }
 }
 
+import CircuitBreaker from './circuit-breaker';
+
 const rateLimit = parseInt(process.env.ZOHO_RATE_LIMIT || '10', 10)
 const zohoRateLimiter = new RateLimiter(rateLimit, 1000)
+
+// Create a circuit breaker for Zoho API calls
+const zohoCircuitBreaker = new CircuitBreaker(5, 60000, 3); // 5 failures, 1 min timeout, 3 successes to reset
 
 interface ZohoLead {
   First_Name: string
@@ -97,13 +102,16 @@ class ZohoCRMService {
   /** Token expiry timestamp */
   private tokenExpiry: number = 0
 
-  /**
+  /**`
    * Creates a new ZohoCRMService instance.
    * Configures the appropriate Zoho API endpoint based on environment variables.
    *
    * @constructor
    */
   constructor() {
+    // Validate configuration at startup
+    ZohoCRMService.validateConfig();
+    
     // Use the appropriate Zoho domain based on your account
     // .com for International, .eu for Europe, .in for India
     this.baseUrl = process.env.ZOHO_CRM_BASE_URL || 'https://www.zohoapis.com/crm/v2'
@@ -182,7 +190,40 @@ class ZohoCRMService {
     }
   }
 
-  /**
+  /**`
+   * Validates Zoho configuration variables at startup
+   */
+  static validateConfig(): void {
+    const requiredVars = [
+      'ZOHO_CRM_CLIENT_ID',
+      'ZOHO_CRM_CLIENT_SECRET',
+      'ZOHO_CRM_REFRESH_TOKEN'
+    ];
+
+    const missingVars = requiredVars.filter(varName => !process.env[varName]);
+    
+    if (missingVars.length > 0) {
+      throw new Error(`Missing required Zoho CRM environment variables: ${missingVars.join(', ')}`);
+    }
+
+    // Validate the format of the base URL if provided
+    const baseUrl = process.env.ZOHO_CRM_BASE_URL || 'https://www.zohoapis.com/crm/v2';
+    try {
+      new URL(baseUrl);
+    } catch (error) {
+      throw new Error('ZOHO_CRM_BASE_URL is not a valid URL');
+    }
+
+    // Validate rate limit is reasonable
+    const rateLimit = parseInt(process.env.ZOHO_RATE_LIMIT || '10', 10);
+    if (isNaN(rateLimit) || rateLimit <= 0 || rateLimit > 1000) {
+      throw new Error('ZOHO_RATE_LIMIT must be a number between 1 and 1000');
+    }
+
+    console.log('Zoho CRM configuration validated successfully');
+  }
+
+  /**`
    * Get the correct accounts domain based on the CRM base URL
    */
   private getAccountsDomain(): string {
@@ -202,112 +243,138 @@ class ZohoCRMService {
     }
   }
 
-  /**
+  /**`
    * Create a lead in Zoho CRM
    */
   async createLead(leadData: Partial<ZohoLead>): Promise<ZohoResponse> {
     try {
-      // Wait for rate limiter before making API call
-      await zohoRateLimiter.waitForToken()
+      // Use circuit breaker to protect against cascading failures
+      return await zohoCircuitBreaker.call(async () => {
+        // Wait for rate limiter before making API call
+        await zohoRateLimiter.waitForToken()
 
-      const accessToken = await this.getAccessToken()
+        const accessToken = await this.getAccessToken()
 
-      const response = await fetch(`${this.baseUrl}/Leads`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Zoho-oauthtoken ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          data: [leadData],
-          trigger: ['approval', 'workflow', 'blueprint'],
-        }),
-      })
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('Zoho create lead error:', {
-          status: response.status,
-          statusText: response.statusText,
-          body: errorText,
-          leadData: JSON.stringify(leadData, null, 2)
+        const response = await fetch(`${this.baseUrl}/Leads`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Zoho-oauthtoken ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            data: [leadData],
+            trigger: ['approval', 'workflow', 'blueprint'],
+          }),
         })
-        throw new Error(`Failed to create lead: ${response.statusText} - ${errorText}`)
-      }
 
-      const result = await response.json()
-      return result
+        if (!response.ok) {
+          const errorText = await response.text()
+          console.error('Zoho create lead error:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText,
+            leadData: JSON.stringify(leadData, null, 2)
+          })
+          
+          // Check if it's a rate limit error and handle accordingly
+          if (response.status === 429) {
+            throw new Error(`Zoho API rate limit exceeded: ${response.statusText}`)
+          }
+          
+          throw new Error(`Failed to create lead: ${response.statusText} - ${errorText}`)
+        }
+
+        const result = await response.json()
+        return result
+      });
     } catch (error) {
       console.error('Error creating Zoho lead:', error)
       throw error
     }
   }
 
-  /**
+  /**`
    * Search for existing leads by email to avoid duplicates
    */
   async searchLeadByEmail(email: string): Promise<any[]> {
     try {
-      // Wait for rate limiter before making API call
-      await zohoRateLimiter.waitForToken()
+      // Use circuit breaker to protect against cascading failures
+      return await zohoCircuitBreaker.call(async () => {
+        // Wait for rate limiter before making API call
+        await zohoRateLimiter.waitForToken()
 
-      const accessToken = await this.getAccessToken()
-      const searchQuery = `(Email:equals:${email})`
+        const accessToken = await this.getAccessToken()
+        const searchQuery = `(Email:equals:${email})`
 
-      const response = await fetch(
-        `${this.baseUrl}/Leads/search?criteria=${encodeURIComponent(searchQuery)}`,
-        {
-          headers: {
-            'Authorization': `Zoho-oauthtoken ${accessToken}`,
-          },
+        const response = await fetch(
+          `${this.baseUrl}/Leads/search?criteria=${encodeURIComponent(searchQuery)}`,
+          {
+            headers: {
+              'Authorization': `Zoho-oauthtoken ${accessToken}`,
+            },
+          }
+        )
+
+        if (response.status === 204) {
+          // No content - no leads found
+          return []
         }
-      )
 
-      if (response.status === 204) {
-        // No content - no leads found
-        return []
-      }
+        if (!response.ok) {
+          // Check if it's a rate limit error and handle accordingly
+          if (response.status === 429) {
+            throw new Error(`Zoho API rate limit exceeded: ${response.statusText}`)
+          }
+          
+          throw new Error(`Failed to search leads: ${response.statusText}`)
+        }
 
-      if (!response.ok) {
-        throw new Error(`Failed to search leads: ${response.statusText}`)
-      }
-
-      const result = await response.json()
-      return result.data || []
+        const result = await response.json()
+        return result.data || []
+      });
     } catch (error) {
       console.error('Error searching Zoho leads:', error)
       return [] // Return empty array on error to allow lead creation
     }
   }
 
-  /**
+  /**`
    * Update an existing lead
    */
   async updateLead(leadId: string, leadData: Partial<ZohoLead>): Promise<ZohoResponse> {
     try {
-      // Wait for rate limiter before making API call
-      await zohoRateLimiter.waitForToken()
+      // Use circuit breaker to protect against cascading failures
+      return await zohoCircuitBreaker.call(async () => {
+        // Wait for rate limiter before making API call
+        await zohoRateLimiter.waitForToken()
 
-      const accessToken = await this.getAccessToken()
+        const accessToken = await this.getAccessToken()
 
-      const response = await fetch(`${this.baseUrl}/Leads/${leadId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Zoho-oauthtoken ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          data: [leadData],
-        }),
-      })
+        const response = await fetch(`${this.baseUrl}/Leads/${leadId}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Zoho-oauthtoken ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            data: [leadData],
+          }),
+        })
 
-      if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`Failed to update lead: ${response.statusText} - ${errorText}`)
-      }
+        if (!response.ok) {
+          const errorText = await response.text()
+          
+          // Check if it's a rate limit error and handle accordingly
+          if (response.status === 429) {
+            throw new Error(`Zoho API rate limit exceeded: ${response.statusText}`)
+          }
+          
+          throw new Error(`Failed to update lead: ${response.statusText} - ${errorText}`)
+        }
 
-      const result = await response.json()
-      return result
+        const result = await response.json()
+        return result
+      });
     } catch (error) {
       console.error('Error updating Zoho lead:', error)
       throw error

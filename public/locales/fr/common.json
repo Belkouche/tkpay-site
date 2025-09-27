@@ -2,7 +2,8 @@
   "nav": {
     "solutions": "Solutions",
     "howItWorks": "Comment ça marche",
-    "contact": "Contact"
+    "contact": "Contact",
+    "apiDocs": "Doc API"
   },
   "hero": {
     "title": "Paiements modernes et sécurisés pour le Maroc",

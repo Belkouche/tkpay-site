@@ -50,12 +50,17 @@ const validateEmail = (email: string, errorMessages?: EmailInputProps['errorMess
     'gmai.com': 'gmail.com',
     'gmial.com': 'gmail.com',
     'gmail.co': 'gmail.com',
+    'gmail.cm': 'gmail.com',
+    'gamil.com': 'gmail.com',
     'yaho.com': 'yahoo.com',
     'yahooo.com': 'yahoo.com',
+    'yaoo.com': 'yahoo.com',
     'hotmai.com': 'hotmail.com',
     'hotmial.com': 'hotmail.com',
     'outlok.com': 'outlook.com',
     'outloo.com': 'outlook.com',
+    'rediffmial.com': 'rediffmail.com',
+    'protonmial.com': 'protonmail.com',
   }
 
   if (domain && typoMap[domain]) {
@@ -63,6 +68,19 @@ const validateEmail = (email: string, errorMessages?: EmailInputProps['errorMess
       isValid: false,
       error: `Did you mean ${email.replace(domain, typoMap[domain])}?`
     }
+  }
+  
+  // Check for potential disposable email addresses
+  const disposableDomains = [
+    '10minutemail.com', 'tempmail.org', 'guerrillamail.com', 
+    'sharklasers.com', 'mailinator.com', 'yopmail.com'
+  ];
+  
+  if (domain && disposableDomains.some(d => domain.includes(d))) {
+    return {
+      isValid: false,
+      error: errorMessages?.invalidEmail || 'Disposable email addresses are not allowed'
+    };
   }
 
   // Check minimum length

@@ -125,6 +125,13 @@ export function ContactForm() {
     setIsSubmitting(true)
 
     try {
+      // Fetch CSRF token
+      const csrfResponse = await fetch('/api/csrf-token');
+      if (!csrfResponse.ok) {
+        throw new Error(`Failed to get CSRF token: ${csrfResponse.status} ${csrfResponse.statusText}`);
+      }
+      const { token } = await csrfResponse.json();
+
       // Client-side data sanitization before sending
       const sanitizedData = DataSanitizer.sanitizeFormData({
         ...data,
@@ -136,9 +143,22 @@ export function ContactForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRF-Token': token,
         },
         body: JSON.stringify(sanitizedData),
       })
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          alert(t('contact.form.errors.submitError') + ': Rate limit exceeded. Please try again later.');
+          return;
+        } else if (response.status === 403) {
+          alert('Security validation failed. Please refresh the page and try again.');
+          return;
+        }
+        
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
 
       const result = await response.json()
 
@@ -153,12 +173,17 @@ export function ContactForm() {
         }, 5000)
       } else {
         console.error('Form submission failed:', result.message)
-        // You could show an error state here
-        alert(t('contact.form.errors.submitError'))
+        alert(result.message || t('contact.form.errors.submitError'))
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Network error:', error)
-      alert(t('contact.form.errors.networkError'))
+      if (error.message?.includes('Rate limit')) {
+        alert('Rate limit exceeded. Please try again later.');
+      } else if (error.message?.includes('CSRF token')) {
+        alert('Security validation failed. Please refresh the page and try again.');
+      } else {
+        alert(t('contact.form.errors.networkError') + (process.env.NODE_ENV === 'development' ? `: ${error.message}` : ''))
+      }
     } finally {
       setIsSubmitting(false)
     }

@@ -1,8 +1,9 @@
 {
-  "nav": {
-    "solutions": "الحلول",
-    "howItWorks": "كيف يعمل",
-    "contact": "اتصل بنا"
+  \"nav\": {
+    \"solutions\": \"الحلول\",
+    \"howItWorks\": \"كيف يعمل\",
+    \"contact\": \"اتصل بنا\",
+    \"apiDocs\": \"وثائق API\"
   },
   "hero": {
     "title": "مدفوعات حديثة وآمنة للمغرب",
@@ -85,7 +86,7 @@
       }
     }
   },
-  "footer": {
-    "copyright": "© 2025 TKPay. جميع الحقوق محفوظة."
+  \"footer\": {
+    \"copyright\": \"© 2025 TKPay. جميع الحقوق محفوظة.\"
   }
 }

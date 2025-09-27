@@ -2,7 +2,8 @@
   "nav": {
     "solutions": "Solutions",
     "howItWorks": "How It Works",
-    "contact": "Contact"
+    "contact": "Contact",
+    "apiDocs": "API Docs"
   },
   "hero": {
     "title": "Modern, secure payments for Morocco",

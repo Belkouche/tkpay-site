@@ -1,15 +1,19 @@
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ExternalLink } from 'lucide-react'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 export function Navigation() {
   const { t } = useTranslation('common')
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const isRTL = router.locale === 'ar'
+
+  // Using environment variable for the API docs URL, defaulting to localhost for development
+  const apiDocsUrl = process.env.NEXT_PUBLIC_API_DOCS_URL || 'http://localhost:8080/api-docs'
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -50,6 +54,15 @@ export function Navigation() {
             >
               {t('nav.contact')}
             </button>
+            <Link 
+              href={apiDocsUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-1"
+            >
+              <span>{t('nav.apiDocs')}</span>
+              <ExternalLink className="w-4 h-4" />
+            </Link>
             <LanguageSwitcher />
           </div>
 
@@ -89,6 +102,15 @@ export function Navigation() {
               >
                 {t('nav.contact')}
               </button>
+              <Link 
+                href={apiDocsUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block px-3 py-2 text-foreground/80 hover:text-foreground transition-colors w-full text-left flex items-center gap-1"
+              >
+                <span>{t('nav.apiDocs')}</span>
+                <ExternalLink className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         )}
