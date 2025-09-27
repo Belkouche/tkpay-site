@@ -47,10 +47,16 @@ export function validateCSRFToken(token: string | undefined): boolean {
 // Clean up expired tokens
 function cleanupExpiredTokens(): void {
   const now = new Date();
+  const expiredTokens: string[] = [];
+  
   for (const [token, expiry] of csrfTokens.entries()) {
     if (expiry < now) {
-      csrfTokens.delete(token);
+      expiredTokens.push(token);
     }
+  }
+  
+  for (const token of expiredTokens) {
+    csrfTokens.delete(token);
   }
 }
 
