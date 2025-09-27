@@ -9,7 +9,12 @@
   "hero": {
     "title": "Modern, secure payments for Morocco",
     "subtitle": "TKPay provides a complete suite of payment solutions tailored to the needs of Moroccans",
-    "cta": "Discover our solutions"
+    "cta": "Discover our solutions",
+    "trustIndicators": {
+      "secure": "Secure and compliant",
+      "support": "24/7 Support",
+      "installation": "Quick installation"
+    }
   },
   "solutions": {
     "title": "Our Solutions",
@@ -24,7 +29,8 @@
     "ecommerce": {
       "title": "E-commerce Payment Module",
       "description": "Seamless online payment integration for businesses to accept digital payments with ease."
-    }
+    },
+    "description": "Our solutions are designed to meet the specific needs of the Moroccan market, with local support and simple integration."
   },
   "howItWorks": {
     "title": "How It Works",
@@ -39,19 +45,7 @@
     "step3": {
       "title": "Start Accepting",
       "description": "Begin accepting payments immediately with our secure solutions."
-    }
-  },
-  "hero": {
-    "trustIndicators": {
-      "secure": "Secure and compliant",
-      "support": "24/7 Support",
-      "installation": "Quick installation"
-    }
-  },
-  "solutions": {
-    "description": "Our solutions are designed to meet the specific needs of the Moroccan market, with local support and simple integration."
-  },
-  "howItWorks": {
+    },
     "cta": {
       "text": "Start your digital transformation today. Our team supports you at every step.",
       "process": "Simplified process",
@@ -107,7 +101,11 @@
       }
     }
   },
-  \"phoneInput\": {\n    \"noCountryFound\": \"No country found.\"\n  },
+  "phoneInput": {
+    "noCountryFound": "No country found.",
+    "searchPlaceholder": "Search country..."
+  },
+  "footer": {
     "copyright": "© 2025 TKPay. All rights reserved."
   }
 }

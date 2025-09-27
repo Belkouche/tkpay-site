@@ -136,7 +136,7 @@ const CountrySelect = ({
                 }
               }, 0);
             }}
-            placeholder="Search country..."
+            placeholder={t('phoneInput.searchPlaceholder')}
           />
           <CommandList>
             <ScrollArea ref={scrollAreaRef} className="h-72">

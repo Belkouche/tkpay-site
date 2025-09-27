@@ -9,7 +9,12 @@
   "hero": {
     "title": "Paiements modernes et sécurisés pour le Maroc",
     "subtitle": "TKPay fournit une suite complète de solutions de paiement adaptées aux besoins des Marocains",
-    "cta": "Découvrir nos solutions"
+    "cta": "Découvrir nos solutions",
+    "trustIndicators": {
+      "secure": "Sécurisé et conforme",
+      "support": "Support 24/7",
+      "installation": "Installation rapide"
+    }
   },
   "solutions": {
     "title": "Nos Solutions",
@@ -24,7 +29,8 @@
     "ecommerce": {
       "title": "Module de Paiement E-commerce",
       "description": "Intégration de paiement en ligne transparente pour que les entreprises acceptent facilement les paiements numériques."
-    }
+    },
+    "description": "Nos solutions sont conçues pour répondre aux besoins spécifiques du marché marocain, avec un support local et une intégration simple."
   },
   "howItWorks": {
     "title": "Comment ça marche",
@@ -39,19 +45,7 @@
     "step3": {
       "title": "Commencez à accepter",
       "description": "Commencez à accepter les paiements immédiatement avec nos solutions sécurisées."
-    }
-  },
-  "hero": {
-    "trustIndicators": {
-      "secure": "Sécurisé et conforme",
-      "support": "Support 24/7",
-      "installation": "Installation rapide"
-    }
-  },
-  "solutions": {
-    "description": "Nos solutions sont conçues pour répondre aux besoins spécifiques du marché marocain, avec un support local et une intégration simple."
-  },
-  "howItWorks": {
+    },
     "cta": {
       "text": "Commencez votre transformation numérique dès aujourd'hui. Notre équipe vous accompagne à chaque étape.",
       "process": "Processus simplifié",
@@ -107,7 +101,11 @@
       }
     }
   },
-  "phoneInput": {\n    "noCountryFound": "Aucun pays trouvé."\n  },
+  "phoneInput": {
+    "noCountryFound": "Aucun pays trouvé.",
+    "searchPlaceholder": "Rechercher un pays..."
+  },
+  "footer": {
     "copyright": "© 2025 TKPay. Tous droits réservés."
   }
 }
