@@ -49,10 +49,18 @@ class SubmissionCache {
   // Clean up expired entries periodically (should be called regularly)
   cleanup(): void {
     const now = Date.now();
-    for (const [key, value] of this.cache.entries()) {
+    const expiredKeys: string[] = [];
+    
+    // Convert to array to avoid iteration issues
+    const entries = Array.from(this.cache.entries());
+    for (const [key, value] of entries) {
       if (now - value.timestamp > this.ttl) {
-        this.cache.delete(key);
+        expiredKeys.push(key);
       }
+    }
+    
+    for (const key of expiredKeys) {
+      this.cache.delete(key);
     }
   }
 }

@@ -77,10 +77,18 @@ class RateLimiter {
   // Method to clean up old records to prevent memory bloat
   cleanup(): void {
     const now = Date.now();
-    for (const [key, record] of this.requests.entries()) {
+    const expiredKeys: string[] = [];
+    
+    // Convert to array to avoid iteration issues
+    const entries = Array.from(this.requests.entries());
+    for (const [key, record] of entries) {
       if (now >= record.resetTime) {
-        this.requests.delete(key);
+        expiredKeys.push(key);
       }
+    }
+    
+    for (const key of expiredKeys) {
+      this.requests.delete(key);
     }
   }
 }
